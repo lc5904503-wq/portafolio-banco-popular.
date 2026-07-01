@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio de Productos y Servicios - Banco Popular</title>
+    <style>
+        /* Paleta de Colores Oficiales Banco Popular (Grupo Aval) */
+        :root {
+            --azul-principal: #002F6C;   /* Azul institucional profundo */
+            --azul-oscuro: #001F4D;      /* Azul de fondo/acentos fuertes */
+            --azul-claro: #E6EEF7;       /* Fondo suave para contrastes */
+            --amarillo-oro: #FFCC00;     /* Amarillo de realce/destacado */
+            --amarillo-hover: #E6B800;   /* Amarillo interacción */
+            --gris-texto: #333333;       /* Texto principal */
+            --gris-suave: #F4F6F9;       /* Fondos secundarios */
+            --blanco: #FFFFFF;
+            --exito: #28A745;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gris-suave);
+            color: var(--gris-texto);
+            display: block;
+            min-height: 100vh;
+        }
+
+        /* Estructura Base: Layout Principal */
+        .layout-table {
+            display: table;
+            width: 100%;
+            height: 100vh;
+            border-collapse: collapse;
+        }
+
+        .layout-row {
+            display: table-row;
+        }
+
+        /* Sidebar - Menú de Navegación Izquierda */
+        .sidebar {
+            display: table-cell;
+            width: 280px;
+            background-color: var(--azul-principal);
+            color: var(--blanco);
+            vertical-align: top;
+            padding: 25px 0;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .brand-section {
+            padding: 0 25px 25px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .brand-logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--blanco);
+        }
+
+        .brand-logo span {
+            color: var(--amarillo-oro);
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: #A0C0E6;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            margin-top: 25px;
+            list-style: none;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 14px 25px;
+            color: #D0E0F5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--azul-oscuro);
+            color: var(--amarillo-oro);
+            border-left: 4px solid var(--amarillo-oro);
+            padding-left: 30px;
+        }
+
+        /* Contenedor de Contenido Principal */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            background-color: var(--gris-suave);
+            min-height: 100vh;
+        }
+
+        /* Banner de Encabezado Dinámico */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--azul-principal) 0%, var(--azul-oscuro) 100%);
+            color: var(--blanco);
+            padding: 45px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,47,108,0.15);
+        }
+
+        .hero-banner::after {
+            content: "";
+            position: absolute;
+            right: -50px;
+            bottom: -50px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 204, 0, 0.1);
+            border-radius: 50%;
+        }
+
+        .hero-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .hero-title span {
+            color: var(--amarillo-oro);
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: #E2ECF7;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .slogan-box {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px 20px;
+            border-left: 4px solid var(--amarillo-oro);
+            border-radius: 0 8px 8px 0;
+            display: inline-block;
+        }
+
+        .slogan-box em {
+            font-style: italic;
+            font-size: 13.5px;
+            color: #FFFAEA;
+        }
+
+        /* Secciones del Portafolio (Ocultas/Visibles Dinámicamente) */
+        .portfolio-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .portfolio-section.active-section {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E0E6ED;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--azul-principal);
+            font-weight: 700;
+        }
+
+        /* Grid Estructurado para Tarjetas de Productos */
+        .products-grid {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 20px;
+        }
+
+        .products-row {
+            display: table-row;
+        }
+
+        .product-card {
+            display: table-cell;
+            width: 33.33%;
+            background: var(--blanco);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            vertical-align: top;
+            border-top: 4px solid var(--azul-principal);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,47,108,0.12);
+        }
+
+        .product-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .product-name {
+            font-size: 18px;
+            color: var(--azul-principal);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .badge-star {
+            background-color: var(--amarillo-oro);
+            color: var(--azul-oscuro);
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 8px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .product-desc {
+            font-size: 13.5px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .benefit-list {
+            list-style: none;
+        }
+
+        .benefit-item {
+            font-size: 13px;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: var(--gris-texto);
+        }
+
+        .benefit-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--azul-principal);
+            font-weight: bold;
+        }
+
+        /* Bloque Especial: Producto Principal (Libranza) */
+        .libranza-showcase {
+            background: var(--blanco);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--amarillo-oro);
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .libranza-meta-grid {
+            display: table;
+            width: 100%;
+            margin-top: 25px;
+            border-collapse: separate;
+            border-spacing: 15px;
+        }
+
+        .libranza-meta-row {
+            display: table-row;
+        }
+
+        .libranza-meta-col {
+            display: table-cell;
+            width: 50%;
+            background: var(--gris-suave);
+            padding: 25px;
+            border-radius: 8px;
+            vertical-align: top;
+        }
+
+        .meta-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--azul-principal);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #E0E6ED;
+            padding-bottom: 5px;
+        }
+
+        .advantage-grid-list {
+            list-style: none;
+        }
+
+        .advantage-grid-item {
+            font-size: 13.5px;
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .advantage-grid-item::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: var(--exito);
+            font-weight: bold;
+        }
+
+        /* Grid de Canales Digitales */
+        .channels-container {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 15px;
+        }
+
+        .channels-row {
+            display: table-row;
+        }
+
+        .channel-box {
+            display: table-cell;
+            background: var(--blanco);
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border-bottom: 3px solid #E0E6ED;
+            transition: all 0.3s ease;
+        }
+
+        .channel-box:hover {
+            border-bottom: 3px solid var(--azul-principal);
+            background: var(--azul-claro);
+            transform: translateY(-2px);
+        }
+
+        .channel-icon {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .channel-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--azul-principal);
+        }
+
+        .portfolio-footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #E0E6ED;
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Adaptación móvil o pantallas pequeñas */
+        @media (max-width: 950px) {
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .product-card, .libranza-meta-col, .channel-box { display: block; width: 100% !important; margin-bottom: 20px; }
+            .products-grid, .libranza-meta-grid, .channels-container, .layout-table, .layout-row { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-table">
+        <div class="layout-row">
+            
+            <div class="sidebar">
+                <div class="brand-section">
+                    <div class="brand-logo">Banco <span>Popular</span></div>
+                    <div class="brand-sub">Grupo Aval</div>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link active" onclick="switchSection(event, 'inicio')">🏠 Inicio / Quiénes Somos</a></li>
+                    <li><a href="#" class="nav-link" onclick="switchSection(event, 'ahorro')">💰 Productos de Ahorro</a></li>
+                    <li><a href="#" class="nav-link" onclick="switchSection(event, 'libranza')">⭐ Crédito Prestayá</a></li>
+                    <li><a href="#" class="nav-link" onclick="switchSection(event, 'creditos')">💳 Otros Créditos y Tarjetas</a></li>
+                    <li><a href="#" class="nav-link" onclick="switchSection(event, 'canales')">🌐 Canales Digitales</a></li>
+                </ul>
+            </div>
+
+            <div class="main-content">
+                
+                <div class="hero-banner">
+                    <div class="hero-title">Portafolio de <span>Productos y Servicios</span></div>
+                    <div class="hero-subtitle">Descubre una gama completa de soluciones financieras diseñadas con agilidad, seguridad y excelentes beneficios para impulsar cada uno de tus proyectos y metas profesionales.</div>
+                    <div class="slogan-box">
+                        <em>"Banco Popular: soluciones financieras que impulsan tus proyectos con el respaldo, la seguridad y la confianza que mereces."</em>
+                    </div>
+                </div>
+
+                <div id="inicio" class="portfolio-section active-section">
+                    <div class="section-header">
+                        <div class="section-title">¿Quiénes somos?</div>
+                    </div>
+                    <div style="background: white; padding: 35px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); line-height: 1.7; font-size: 15px;">
+                        <p style="margin-bottom: 15px;">El <strong>Banco Popular</strong> es una entidad financiera colombiana de gran trayectoria, perteneciente al <strong>Grupo Aval</strong>. Nos especializamos en ofrecer soluciones integrales de ahorro, inversión y financiación para personas, pensionados, empleados del sector público y privado, empresas y entidades gubernamentales.</p>
+                        <p>Nuestro objetivo primordial es brindar productos financieros seguros, ágiles y con un valor agregado excepcional, garantizando una experiencia de servicio óptima respaldada por la solidez y confianza del grupo financiero más grande del país.</p>
+                    </div>
+                </div>
+
+                <div id="ahorro" class="portfolio-section">
+                    <div class="section-header">
+                        <div class="section-title">Productos de Ahorro e Inversión</div>
+                    </div>
+                    <div class="products-grid">
+                        <div class="products-row">
+                            <div class="product-card">
+                                <div class="product-icon">💳</div>
+                                <div class="product-name">Cuenta de Ahorros</div>
+                                <div class="product-desc">La herramienta ideal para administrar tu dinero de forma diaria con total seguridad y disponibilidad inmediata.</div>
+                                <ul class="benefit-list">
+                                    <li class="benefit-item">Tarjeta débito incluida.</li>
+                                    <li class="benefit-item">Transferencias electrónicas fáciles.</li>
+                                    <li class="benefit-item">Acceso a Banca Virtual y App.</li>
+                                    <li class="benefit-item">Retiros en cajeros de la Red Aval.</li>
+                                    <li class="benefit-item">Manejo fácil y seguro.</li>
+                                </ul>
+                            </div>
+                            <div class="product-card">
+                                <div class="product-icon">💼</div>
+                                <div class="product-name">Cuenta Nómina</div>
+                                <div class="product-desc">Diseñada exclusivamente para recibir tu salario y disfrutar de condiciones preferenciales de forma inmediata.</div>
+                                <ul class="benefit-list">
+                                    <li class="benefit-item">Consignación automática del sueldo.</li>
+                                    <li class="benefit-item">Acceso a créditos con tasas preferenciales.</li>
+                                    <li class="benefit-item">Tarjeta Débito ágil.</li>
+                                    <li class="benefit-item">Canales digitales disponibles.</li>
+                                </ul>
+                            </div>
+                            <div class="product-card">
+                                <div class="product-icon">📈</div>
+                                <div class="product-name">CDT</div>
+                                <div class="product-desc">La alternativa de inversión perfecta para quienes buscan hacer crecer su capital de manera segura y garantizada.</div>
+                                <ul class="benefit-list">
+                                    <li class="benefit-item">Rentabilidad fija asegurada.</li>
+                                    <li class="benefit-item">Diferentes plazos personalizables.</li>
+                                    <li class="benefit-item">Máxima seguridad en tu inversión.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="libranza" class="portfolio-section">
+                    <div class="section-header">
+                        <div class="section-title">⭐ Producto Principal: Crédito de Libranza Prestayá</div>
+                    </div>
+                    
+                    <div class="libranza-showcase">
+                        <div class="product-name" style="font-size: 22px; margin-bottom: 15px; color: var(--azul-oscuro);">
+                            Crédito de Libranza Prestayá <span class="badge-star">Líder de Mercado</span>
+                        </div>
+                        <p style="font-size: 15px; line-height: 1.6; color: #444; margin-bottom: 20px;">
+                            Es un crédito de libre inversión donde el pago de las cuotas mensuales se descuenta de forma automática directamente de la nómina o de la mesada pensional. Esto es posible siempre que el empleador o la entidad pagadora cuente con un convenio activo con el Banco Popular.
+                        </p>
+
+                        <div class="libranza-meta-grid">
+                            <div class="libranza-meta-row">
+                                <div class="libranza-meta-col">
+                                    <div class="meta-title">📋 Características Generales</div>
+                                    <ul class="advantage-grid-list">
+                                        <li class="advantage-grid-item"><strong>Cuotas fijas</strong> mensuales.</li>
+                                        <li class="advantage-grid-item"><strong>Tasa fija</strong> durante toda la vigencia del crédito.</li>
+                                        <li class="advantage-grid-item"><strong>Sin necesidad de codeudor</strong>.</li>
+                                        <li class="advantage-grid-item">Montos desde <strong>$1 millón hasta $520 millones</strong> (según capacidad de pago).</li>
+                                        <li class="advantage-grid-item">Plazos cómodos desde <strong>12 meses</strong>.</li>
+                                        <li class="advantage-grid-item">Posibilidad de realizar <strong>compra de cartera</strong>.</li>
+                                        <li class="advantage-grid-item">Seguro integral que protege la deuda contra imprevistos.</li>
+                                        <li class="advantage-grid-item">Permite abonos extraordinarios sin ninguna penalización.</li>
+                                    </ul>
+                                </div>
+                                <div class="libranza-meta-col">
+                                    <div class="meta-title">🎯 Dirigido a:</div>
+                                    <p style="font-size: 13.5px; margin-bottom: 20px; color:#555; padding-left: 5px;">
+                                        Pensionados, Docentes, Empleados Públicos, Fuerza Pública y Trabajadores de empresas con convenio activo.
+                                    </p>
+                                    
+                                    <div class="meta-title">✔️ Ventajas de Elegir Prestayá</div>
+                                    <ul class="advantage-grid-list">
+                                        <li class="advantage-grid-item">Descuento automático por nómina (sin filas ni olvidos).</li>
+                                        <li class="advantage-grid-item">Menores tasas frente a créditos de consumo tradicionales.</li>
+                                        <li class="advantage-grid-item">Mayor facilidad y rapidez de aprobación.</li>
+                                        <li class="advantage-grid-item"><strong>Múltiples destinos de uso:</strong> Compra de cartera, educación, remodelación de vivienda, viajes, libre inversión, pago de deudas o imprevistos.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="creditos" class="portfolio-section">
+                    <div class="section-header">
+                        <div class="section-title">Financiación y Tarjetas de Crédito</div>
+                    </div>
+                    <div class="products-grid">
+                        <div class="products-row">
+                            <div class="product-card">
+                                <div class="product-icon">🎯</div>
+                                <div class="product-name">Crédito de Libre Destino</div>
+                                <div class="product-desc">Te permite financiar cualquier tipo de necesidad personal con desembolsos inmediatos.</div>
+                                <ul class="benefit-list">
+                                    <li class="benefit-item">Cuotas fijas mensuales.</li>
+                                    <li class="benefit-item">Desembolso rápido.</li>
+                                    <li class="benefit-item">Libre utilización del dinero.</li>
+                                </ul>
+                            </div>
+                            <div class="product-card">
+                                <div class="product-icon">🏠</div>
+                                <div class="product-name">Crédito de Vivienda</div>
+                                <div class="product-desc">La opción perfecta para comprar tu vivienda propia, bien sea nueva o usada.</div>
+                                <ul class="benefit-list">
+                                    <li class="benefit-item">Amplios plazos de pago.</li>
+                                    <li class="benefit-item">Financiación altamente competitiva.</li>
+                                    <li class="benefit-item">Diferentes modalidades de pago.</li>
+                                </ul>
+                            </div>
+                            <div class="product-card">
+                                <div class="product-icon">💳</div>
+                                <div class="product-name">Tarjetas de Crédito</div>
+                                <div class="product-desc">Franquicias de cobertura global para compras nacionales, internacionales y virtuales.</div>
+                                <ul class="benefit-list">
+                                    <li class="benefit-item">Compras en comercios físicos y virtuales.</li>
+                                    <li class="benefit-item">Avances en efectivo rápidos.</li>
+                                    <li class="benefit-item">Atractivos programas de beneficios.</li>
+                                    <li class="benefit-item">Diferimiento de compras a cuotas.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="canales" class="portfolio-section">
+                    <div class="section-header">
+                        <div class="section-title">Canales de Atención y Servicios Digitales</div>
+                    </div>
+                    <p style="margin-bottom: 25px; font-size: 14.5px; color:#555;">Realiza de manera remota u oficial todas tus transacciones con comodidad total:</p>
+                    
+                    <div class="channels-container">
+                        <div class="channels-row">
+                            <div class="channel-box">
+                                <div class="channel-icon">📱</div>
+                                <div class="channel-name">App Banco Popular</div>
+                            </div>
+                            <div class="channel-box">
+                                <div class="channel-icon">💻</div>
+                                <div class="channel-name">Banca Virtual</div>
+                            </div>
+                            <div class="channel-box">
+                                <div class="channel-icon">🏧</div>
+                                <div class="channel-name">Cajeros Red Aval</div>
+                            </div>
+                        </div>
+                        <div class="channels-row">
+                            <div class="channel-box">
+                                <div class="channel-icon">🤝</div>
+                                <div class="channel-name">Corresponsales Bancarios</div>
+                            </div>
+                            <div class="channel-box">
+                                <div class="channel-icon">🏢</div>
+                                <div class="channel-name">Oficinas Físicas</div>
+                            </div>
+                            <div class="channel-box">
+                                <div class="channel-icon">📞</div>
+                                <div class="channel-name">Línea Telefónica</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-footer">
+                    &copy; 2026 Banco Popular Colombia - Grupo Aval. Diseñado para Simulación Académica - Proyecto SENA.
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function switchSection(event, sectionId) {
+            event.preventDefault(); // Evita que la página recargue
+            
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.portfolio-section');
+            sections.forEach(section => {
+                section.classList.remove('active-section');
+            });
+            
+            // Desactivar todos los enlaces del menú
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Activar la sección seleccionada
+            document.getElementById(sectionId).classList.add('active-section');
+            
+            // Colocar la clase activa al botón presionado
+            event.currentTarget.classList.add('active');
+            
+            // Desplazar el scroll al inicio del contenido suavemente
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
